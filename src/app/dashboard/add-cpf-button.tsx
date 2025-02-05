@@ -9,22 +9,13 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ChangeEventHandler, forwardRef, useState } from "react";
+import { useState } from "react";
 import { InputMask } from "@react-input/mask";
 import { cpfService } from "@/services/cpf-service";
 import { toast } from "sonner";
+import CustomMaskedInput from "@/components/ui/custom-masked-input";
 
-interface CustomInputProps {
-  onChange: ChangeEventHandler<HTMLInputElement>;
-}
-
-const CustomMaskedInput = forwardRef<HTMLInputElement, CustomInputProps>(
-  ({ onChange, ...props }, ref) => (
-    <Input ref={ref} id="cpf" {...props} onChange={onChange} />
-  )
-);
 CustomMaskedInput.displayName = "CustomMaskedInput";
 
 export default function AddCpfButton({ onCreate }: { onCreate: () => void }) {
@@ -58,12 +49,17 @@ export default function AddCpfButton({ onCreate }: { onCreate: () => void }) {
   };
 
   return (
-    <AlertDialog open={open} onOpenChange={(state) => !state && setCpfValue("")}>
+    <AlertDialog
+      open={open}
+      onOpenChange={(state) => !state && setCpfValue("")}
+    >
       <Button onClick={() => setOpen(true)}>Add CPF</Button>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Add new CPF</AlertDialogTitle>
-          <AlertDialogDescription>Enter the CPF you want to add.</AlertDialogDescription>
+          <AlertDialogDescription>
+            Enter the CPF you want to add.
+          </AlertDialogDescription>
         </AlertDialogHeader>
         <div className="grid w-full items-center gap-1.5">
           <Label htmlFor="cpf">CPF</Label>
@@ -72,11 +68,17 @@ export default function AddCpfButton({ onCreate }: { onCreate: () => void }) {
             mask="___.___.___-__"
             replacement={{ _: /\d/ }}
             onChange={handleOnChange}
+            id="cpf"
           />
         </div>
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={() => setOpen(false)}>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={handleCreateCpf} disabled={loading || cpfValue.length !== 11}>
+          <AlertDialogCancel onClick={() => setOpen(false)}>
+            Cancel
+          </AlertDialogCancel>
+          <AlertDialogAction
+            onClick={handleCreateCpf}
+            disabled={loading || cpfValue.length !== 11}
+          >
             {loading ? "Processing..." : "Continue"}
           </AlertDialogAction>
         </AlertDialogFooter>
