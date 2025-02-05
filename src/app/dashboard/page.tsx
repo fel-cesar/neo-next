@@ -1,5 +1,6 @@
 "use client";
 import { cpfService } from "@/services/cpf-service";
+import { cnpjService } from "@/services/cnpj-service";
 import {
   Table,
   TableBody,
@@ -12,19 +13,27 @@ import { useEffect, useState } from "react";
 import { Cpf } from "@/entities/cpf";
 import AddCpfButton from "./add-cpf-button";
 import { Label } from "@/components/ui/label";
-import CpfTableRow from "./cpf-table-row";
 import DebounceInput from "./debounce-input";
+import { Cnpj } from "@/entities/cnpj";
+import CustomTableRow from "./custom-table-row";
+import { IService } from "@/services/interfaces";
 
 export default function Dashboard() {
   const [cpfList, setCpfList] = useState<Cpf[]>([]);
+  const [cnpjList, setCnpjList] = useState<Cnpj[]>([]);
 
   useEffect(() => {
     const fetchCpfList = async () => {
-      const data = await cpfService.getCpfList({});
+      const data = await cpfService.getList({});
       setCpfList(data);
+    };
+    const fetchCnpjList = async () => {
+      const data = await cnpjService.getList({});
+      setCnpjList(data);
     };
 
     fetchCpfList();
+    fetchCnpjList();
   }, []);
 
   return (
@@ -36,12 +45,15 @@ export default function Dashboard() {
         <Label> Filter by CPF: </Label>
         <DebounceInput setCpfList={setCpfList} />
       </div>
-      <CpfList list={cpfList} />
+      <div className="flex">
+        <CustomList list={cpfList} service={cpfService} />
+        <CustomList list={cnpjList} service={cnpjService} />
+      </div>
     </div>
   );
 }
 
-function CpfList({ list }: { list: Cpf[] }) {
+function CustomList({ list, service}: { list: Cpf[] | Cnpj[], service: IService<Cnpj | Cpf> }) {
   return (
     <Table className="min-w-screen-sm max-w-screen-sm items-center bg-slate-300 justify-self-center">
       <TableCaption>A list of Cpf`s</TableCaption>
@@ -57,7 +69,7 @@ function CpfList({ list }: { list: Cpf[] }) {
       </TableHeader>
       <TableBody>
         {list.map((cpf) => {
-          return <CpfTableRow key={cpf.value} cpf={cpf} />;
+          return <CustomTableRow key={cpf.value} cpf={cpf} service={service} />;
         })}
       </TableBody>
     </Table>

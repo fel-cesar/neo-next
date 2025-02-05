@@ -1,12 +1,14 @@
 // "use client";
 import { Switch } from "@/components/ui/switch";
 import { TableCell } from "@/components/ui/table";
+import { Cnpj } from "@/entities/cnpj";
 import { Cpf } from "@/entities/cpf";
-import { cpfService } from "@/services/cpf-service";
+import { IService } from "@/services/interfaces";
 import { useState, useEffect } from "react";
 
 export interface BlockStatusTableCellProps {
   cpf: Cpf;
+  service: IService<Cpf | Cnpj>;
 }
 export default function BlockStatusTableCell(props: BlockStatusTableCellProps) {
   const [checked, setChecked] = useState(false);
@@ -18,7 +20,7 @@ export default function BlockStatusTableCell(props: BlockStatusTableCellProps) {
 
   async function handleChange(checked: boolean) {
     setLoading(true);
-    await cpfService.switchBlockCpf({ cpfId: props.cpf.id, block: checked });
+    await props.service.switchBlock({ id: props.cpf.id, block: checked });
     setLoading(false);
     setChecked(checked);
   }

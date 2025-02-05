@@ -12,7 +12,7 @@ export default function DebounceInput({
 
   useEffect(() => {
     const fetchCpfList = async () => {
-      const data = await cpfService.getCpfList({
+      const data = await cpfService.getList({
         query,
       });
       setCpfList(data);

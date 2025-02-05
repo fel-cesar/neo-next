@@ -39,7 +39,7 @@ export default function AddCpfButton() {
   async function handleCreateCpf() {
     try {
       setLoading(true);
-      await cpfService.createCpf(cpfValue);
+      await cpfService.create(cpfValue);
       setLoading(false);
       setOpen(false);
       toast.success(`CPF "${cpfValue} was created successfully`);

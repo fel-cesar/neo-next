@@ -8,26 +8,27 @@ import { TableRow, TableCell } from "@/components/ui/table";
 import BlockStatusTableCell from "./block-status-table-cell";
 import { Cpf } from "@/entities/cpf";
 import { Button } from "@/components/ui/button";
-import { cpfService } from "@/services/cpf-service";
 import { toast } from "sonner";
+import { IService } from "@/services/interfaces";
+import { Cnpj } from "@/entities/cnpj";
 
-export default function CpfTableRow({ cpf }: { cpf: Cpf }) {
+export default function CustomTableRow({ cpf, service }: { cpf: Cpf, service: IService<Cpf | Cnpj> }) {
   return (
     <TableRow key={cpf.value}>
-      <BlockStatusTableCell cpf={cpf} />
+      <BlockStatusTableCell cpf={cpf} service={service} />
       <TableCell>{cpf.value}</TableCell>
       <TableCell>John Doe</TableCell>
       <TableCell>
-        <TableRowMenu cpf={cpf} />
+        <TableRowMenu cpf={cpf} service={service} />
       </TableCell>
     </TableRow>
   );
 }
 
-function TableRowMenu({ cpf }: { cpf: Cpf }) {
+function TableRowMenu({ cpf, service }: { cpf: Cpf, service: IService<Cpf | Cnpj> }) {
   async function handleDelete() {
     try {
-      await cpfService.deleteCpf(cpf.id);
+      await service.delete(cpf.id);
       console.log("delete");
     } catch (error) {
       console.log(error);

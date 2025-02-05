@@ -1,19 +1,21 @@
 import { Cpf } from "@/entities/cpf";
 import { cpfRepository } from "@repositories/cpf-repository";
+import { IService } from "./interfaces";
+import { CpfValidator } from "@/entities/cpf.validator";
 
-export const cpfService = {
-  async createCpf(cpfValue: string): Promise<Cpf> {
+export const cpfService: IService<Cpf> = {
+  async create(cpfValue: string): Promise<Cpf> {
+    if (!CpfValidator.isValid(cpfValue)) throw new Error("Invalid CNPJ data");
     const createdObject = await cpfRepository.createCpf(cpfValue);
-    // COMMENT: validation is made at the entity level
-    // if (!cpf.getValue()) throw new Error("Invalid CPF data");
+
     return createdObject;
   },
 
-  async deleteCpf(cpfId: string): Promise<void> {
+  async delete(cpfId: string): Promise<void> {
     await cpfRepository.deleteCpf(cpfId);
   },
 
-  async getCpfList({
+  async getList({
     query,
     blocked,
     ordering,
@@ -30,15 +32,15 @@ export const cpfService = {
     return cpfList;
   },
 
-  async switchBlockCpf({
-    cpfId,
+  async switchBlock({
+    id,
     block,
   }: {
-    cpfId: string;
+    id: string;
     block: boolean;
   }): Promise<boolean> {
     const blockStatus = await cpfRepository.blockCpf({
-      cpfId,
+      cpfId: id,
       shouldBlock: block,
     });
     return blockStatus;
