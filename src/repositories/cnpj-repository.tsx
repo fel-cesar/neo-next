@@ -1,25 +1,5 @@
 import { Cnpj, CnpjEntity } from "@/entities/cnpj";
-
-export interface ICnpjRepository {
-  createCnpj(value: string): Promise<Cnpj>;
-  deleteCnpj(cnpjId: string): Promise<void>;
-  getCnpjList({
-    query,
-    blocked,
-    ordering,
-  }: {
-    query?: string;
-    blocked?: boolean;
-    ordering?: "asc" | "desc";
-  }): Promise<Cnpj[]>;
-  blockCnpj({
-    cnpjId,
-    shouldBlock,
-  }: {
-    cnpjId: string;
-    shouldBlock: boolean;
-  }): Promise<boolean>;
-}
+import { ICnpjRepository } from "./interfaces";
 
 export const cnpjRepository: ICnpjRepository = {
   async createCnpj(value: string): Promise<Cnpj> {

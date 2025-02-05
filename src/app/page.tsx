@@ -1,11 +1,11 @@
-import Link from "next/link";
+import { redirect } from 'next/navigation'
 
 export default function Home() {
+
+  redirect('/dashboard')
+
   return (
-    <div>
-      <p>hello cpf</p>
-      <Link href="/dashboard">DASHBOARD</Link>
-      <input type="text" placeholder="type here the CPF to filter results" />
-    </div>
+    <>
+    </>
   );
 }

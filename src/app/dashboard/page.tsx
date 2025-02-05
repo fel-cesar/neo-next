@@ -17,6 +17,7 @@ import DebounceInput from "./debounce-input";
 import { Cnpj } from "@/entities/cnpj";
 import CustomTableRow from "./custom-table-row";
 import { IService } from "@/services/interfaces";
+import ServerStatusCard from "./server-status-card";
 
 export default function Dashboard() {
   const [cpfList, setCpfList] = useState<Cpf[]>([]);
@@ -44,6 +45,7 @@ export default function Dashboard() {
 
   return (
     <div className="flex flex-col bg-gray-100">
+        <ServerStatusCard />
       <div className="flex justify-end p-4">
         <AddCpfButton onCreate={refresh} />
       </div>
@@ -53,7 +55,11 @@ export default function Dashboard() {
       </div>
       <div className="flex">
         <CustomList list={cpfList} service={cpfService} onRowChange={refresh} />
-        <CustomList list={cnpjList} service={cnpjService} onRowChange={refresh} />
+        <CustomList
+          list={cnpjList}
+          service={cnpjService}
+          onRowChange={refresh}
+        />
       </div>
     </div>
   );
