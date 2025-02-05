@@ -1,11 +1,11 @@
-export type Cpf = {
+export type Cnpj = {
   id: string;
   value: string;
   blocked: boolean;
   createdAt: Date;
 };
 
-export class CpfEntity {
+export class CnpjEntity {
   private readonly id: string;
   private readonly value: string;
   private readonly blocked: boolean;
@@ -22,7 +22,6 @@ export class CpfEntity {
     blocked: boolean;
     createdAt: Date;
   }) {
-
     this.id = id;
     this.value = value;
     this.blocked = blocked;
@@ -45,7 +44,7 @@ export class CpfEntity {
     return this.createdAt;
   }
 
-  toJsonObject(): Cpf {
+  toJsonObject(): Cnpj {
     return {
       id: this.id,
       value: this.value,
