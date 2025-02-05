@@ -27,7 +27,7 @@ const customMaskedInput = forwardRef<HTMLInputElement, CustomInputProps>(
   }
 );
 
-export default function AddCpfButton() {
+export default function AddCpfButton({ onCreate }: { onCreate: () => void }) {
   const [open, setOpen] = useState(false);
   const [cpfValue, setCpfValue] = useState("");
   const [loading, setLoading] = useState(false);
@@ -40,11 +40,12 @@ export default function AddCpfButton() {
     try {
       setLoading(true);
       await cpfService.create(cpfValue);
+      await onCreate();
       setLoading(false);
       setOpen(false);
       toast.success(`CPF "${cpfValue} was created successfully`);
     } catch (error) {
-      console.log(error);
+      console.error(error);
       toast.error(`There was an error creating the CPF "${cpfValue}"`);
       setLoading(false);
     }

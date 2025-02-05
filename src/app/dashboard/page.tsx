@@ -22,16 +22,22 @@ export default function Dashboard() {
   const [cpfList, setCpfList] = useState<Cpf[]>([]);
   const [cnpjList, setCnpjList] = useState<Cnpj[]>([]);
 
-  useEffect(() => {
-    const fetchCpfList = async () => {
-      const data = await cpfService.getList({});
-      setCpfList(data);
-    };
-    const fetchCnpjList = async () => {
-      const data = await cnpjService.getList({});
-      setCnpjList(data);
-    };
+  async function refresh() {
+    await fetchCpfList();
+    await fetchCnpjList();
+  }
 
+  const fetchCpfList = async () => {
+    const data = await cpfService.getList({});
+    setCpfList(data);
+  };
+
+  const fetchCnpjList = async () => {
+    const data = await cnpjService.getList({});
+    setCnpjList(data);
+  };
+
+  useEffect(() => {
     fetchCpfList();
     fetchCnpjList();
   }, []);
@@ -39,21 +45,29 @@ export default function Dashboard() {
   return (
     <div className="flex flex-col bg-gray-100">
       <div className="flex justify-end p-4">
-        <AddCpfButton />
+        <AddCpfButton onCreate={refresh} />
       </div>
       <div className="flex justify-center p-4 max-w-screen-sm">
         <Label> Filter by CPF: </Label>
         <DebounceInput setCpfList={setCpfList} />
       </div>
       <div className="flex">
-        <CustomList list={cpfList} service={cpfService} />
-        <CustomList list={cnpjList} service={cnpjService} />
+        <CustomList list={cpfList} service={cpfService} onRowChange={refresh} />
+        <CustomList list={cnpjList} service={cnpjService} onRowChange={refresh} />
       </div>
     </div>
   );
 }
 
-function CustomList({ list, service}: { list: Cpf[] | Cnpj[], service: IService<Cnpj | Cpf> }) {
+function CustomList({
+  list,
+  service,
+  onRowChange,
+}: {
+  list: Cpf[] | Cnpj[];
+  service: IService<Cnpj | Cpf>;
+  onRowChange: () => void;
+}) {
   return (
     <Table className="min-w-screen-sm max-w-screen-sm items-center bg-slate-300 justify-self-center">
       <TableCaption>A list of Cpf`s</TableCaption>
@@ -69,7 +83,14 @@ function CustomList({ list, service}: { list: Cpf[] | Cnpj[], service: IService<
       </TableHeader>
       <TableBody>
         {list.map((cpf) => {
-          return <CustomTableRow key={cpf.value} cpf={cpf} service={service} />;
+          return (
+            <CustomTableRow
+              key={cpf.value}
+              cpf={cpf}
+              service={service}
+              onChange={onRowChange}
+            />
+          );
         })}
       </TableBody>
     </Table>
