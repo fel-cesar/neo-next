@@ -13,10 +13,12 @@ import {
 import { useEffect, useState } from "react";
 import { Cpf } from "@/entities/cpf";
 import BlockCpfCheckbox from "./checkbox";
+import AddCpfButton from "./add-cpf-button";
 
 export default function Dashboard() {
   return (
     <div>
+      <AddCpfButton />
       <CpfList></CpfList>
     </div>
   );
@@ -40,7 +42,7 @@ function CpfList() {
       <TableHeader>
         <TableRow>
           <TableHead className="w-[50px]">
-            <input type="checkbox" name="selectAll" id="selectAll" />
+            <div className="text-black font-bold">Block Status</div>
           </TableHead>
           <TableHead className="text-black font-bold">CPF</TableHead>
           <TableHead className="text-black font-bold">Name</TableHead>
