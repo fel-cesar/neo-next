@@ -4,7 +4,6 @@ import {
   Table,
   TableBody,
   TableCaption,
-  TableCell,
   TableHead,
   TableHeader,
   TableRow,
@@ -12,13 +11,21 @@ import {
 import { useEffect, useState } from "react";
 import { Cpf } from "@/entities/cpf";
 import AddCpfButton from "./add-cpf-button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import BlockStatusTableCell from "./block-status-table-cell";
 import CpfTableRow from "./cpf-table-row";
+import DebounceInput from "./debounce-input";
 
 export default function Dashboard() {
-  const [filter, setFilter] = useState("");
+  const [cpfList, setCpfList] = useState<Cpf[]>([]);
+
+  useEffect(() => {
+    const fetchCpfList = async () => {
+      const data = await cpfService.getCpfList({});
+      setCpfList(data);
+    };
+
+    fetchCpfList();
+  }, []);
 
   return (
     <div className="flex flex-col bg-gray-100">
@@ -27,32 +34,14 @@ export default function Dashboard() {
       </div>
       <div className="flex justify-center p-4 max-w-screen-sm">
         <Label> Filter by CPF: </Label>
-        <Input
-          className="w-80"
-          type="text"
-          placeholder="type here the CPF to filter results"
-          value={filter}
-          onChange={(event) => setFilter(event.target.value)}
-        />
+        <DebounceInput setCpfList={setCpfList} />
       </div>
-      <CpfList filter={filter} />
+      <CpfList list={cpfList} />
     </div>
   );
 }
 
-function CpfList({ filter }: { filter: string }) {
-  const [cpfList, setCpfList] = useState<Cpf[]>([]);
-  // const [shouldRefresh, setLoading] = useState(false);
-
-  useEffect(() => {
-    const fetchCpfList = async () => {
-      const data = await cpfService.getCpfList();
-      setCpfList(data);
-    };
-
-    fetchCpfList();
-  }, []);
-
+function CpfList({ list }: { list: Cpf[] }) {
   return (
     <Table className="min-w-screen-sm max-w-screen-sm items-center bg-slate-300 justify-self-center">
       <TableCaption>A list of Cpf`s</TableCaption>
@@ -67,11 +56,9 @@ function CpfList({ filter }: { filter: string }) {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {cpfList
-          .filter((cpf) => cpf.value.includes(filter) || filter === "")
-          .map((cpf) => {
-            return <CpfTableRow key={cpf.value} cpf={cpf} />;
-          })}
+        {list.map((cpf) => {
+          return <CpfTableRow key={cpf.value} cpf={cpf} />;
+        })}
       </TableBody>
     </Table>
   );

@@ -13,9 +13,20 @@ export const cpfService = {
     await cpfRepository.deleteCpf(cpfId);
   },
 
-  // TODO: we should have parameters like paging, sorting, filtering, etc.
-  async getCpfList(): Promise<Cpf[]> {
-    const cpfList = await cpfRepository.getCpfList();
+  async getCpfList({
+    query,
+    blocked,
+    ordering,
+  }: {
+    query?: string;
+    blocked?: boolean;
+    ordering?: "asc" | "desc";
+  }): Promise<Cpf[]> {
+    const cpfList = await cpfRepository.getCpfList({
+      query,
+      blocked,
+      ordering,
+    });
     return cpfList;
   },
 

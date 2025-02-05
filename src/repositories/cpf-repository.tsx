@@ -5,7 +5,15 @@ import { Cpf, CpfEntity } from "@/entities/cpf";
 export interface ICpfRepository {
   createCpf(value: string): Promise<Cpf>;
   deleteCpf(cpfId: string): Promise<void>;
-  getCpfList(): Promise<Cpf[]>;
+  getCpfList({
+    query,
+    blocked,
+    ordering,
+  }: {
+    query?: string;
+    blocked?: boolean;
+    ordering?: "asc" | "desc";
+  }): Promise<Cpf[]>;
   blockCpf({
     cpfId,
     shouldBlock,
@@ -39,9 +47,28 @@ export const cpfRepository: ICpfRepository = {
       throw new Error("Error deleting CPF");
     }
   },
-  async getCpfList() {
+  async getCpfList({
+    query,
+    blocked,
+    ordering,
+  }: {
+    query?: string;
+    blocked?: boolean;
+    ordering?: "asc" | "desc";
+  }) {
     try {
-      const res = await fetch("http://localhost:3000/api/cpf");
+      const url = new URL("http://localhost:3000/api/cpf");
+      if (query) {
+        url.searchParams.append("query", query);
+      }
+      if (blocked) {
+        url.searchParams.append("blocked", blocked.toString());
+      }
+      if (ordering) {
+        url.searchParams.append("ordering", ordering);
+      }
+
+      const res = await fetch(url);
       const data = await res.json();
 
       if (res.status !== 200) {
