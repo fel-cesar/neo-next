@@ -1,45 +1,57 @@
-import { Cpf } from "@entities/cpf";
-
-
+import { Cpf, CpfEntity } from "@/entities/cpf";
 
 // COMMENT: The responsibility of the repository is to fetch the data from the data source (decide the data source),  in this case, we merged the repository and the data sources for simplicity.
 
 export interface ICpfRepository {
-  getCpf(): Promise<Cpf>;
+  createCpf(value: string): Promise<Cpf>;
   getCpfList(): Promise<Cpf[]>;
+  blockCpf({
+    cpfId,
+    shouldBlock,
+  }: {
+    cpfId: string;
+    shouldBlock: boolean;
+  }): Promise<boolean>;
 }
 
-
-// example of repository mocked locally
 export const cpfRepository: ICpfRepository = {
-  async getCpf() {
-    return new Cpf("02894283199");
+  async createCpf(value: string): Promise<Cpf> {
+    const res = await fetch(`http://localhost:3000/api/cpf`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ value }),
+    });
+    return new CpfEntity(await res.json()).toJsonObject();
   },
 
   async getCpfList() {
-    return [new Cpf("02894283199"), new Cpf("02894283199")];
-  },
-};
-
-// example of async repository mocked locally
-export const testAsyncCpfRepository: ICpfRepository = {
-  async getCpf() {
-    const promise = new Promise<Cpf>((resolve) => {
-      setTimeout(() => {
-        resolve(new Cpf("02894283199"));
-      }, 1000);
-    });
-
-    return promise;
+    try {
+      const res = await fetch("http://localhost:3000/api/cpf");
+      const data = await res.json();
+      return data.map((cpf: Cpf) => new CpfEntity(cpf).toJsonObject());
+    } catch (error) {
+      console.error(error);
+      throw new Error((error as Error).message);
+    }
   },
 
-  async getCpfList() {
-    const promise = new Promise<Cpf[]>((resolve) => {
-      setTimeout(() => {
-        resolve([new Cpf("02894283199"), new Cpf("02894283199")]);
-      }, 1000);
+  async blockCpf({
+    cpfId,
+    shouldBlock,
+  }: {
+    cpfId: string;
+    shouldBlock: boolean;
+  }): Promise<boolean> {
+    const res = await fetch(`http://localhost:3000/api/cpf/${cpfId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ blocked: shouldBlock }),
     });
-
-    return promise;
+    const blocked = (await res.json()).blocked;
+    return blocked;
   },
 };

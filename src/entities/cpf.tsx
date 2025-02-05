@@ -3,25 +3,69 @@
 // COMMENT: I enforced the validation here for sake of CLEAN arch demonstration as the entities should be self validating.
 // COMMENT: We could also have a separate service that validates the data.
 
-export class Cpf {
+// TODO: Entity or data object?
+export type Cpf = {
+  id: string;
+  value: string;
+  blocked: boolean;
+  createdAt: Date;
+};
+export class CpfEntity {
+  private readonly id: string;
   private readonly value: string;
+  private readonly blocked: boolean;
+  private readonly createdAt: Date;
 
-  constructor(cpf: string) {
+  constructor({
+    id,
+    value,
+    blocked,
+    createdAt,
+  }: {
+    id: string;
+    value: string;
+    blocked: boolean;
+    createdAt: Date;
+  }) {
     // COMMENT: here we can also make types validation on runtime
     // COMMENT: we can either throw an error create the object with "invalid" flag (depending on the error handling)
-    if (!this.isValidCpf(cpf)) {
-      throw new Error("Invalid CPF format"); // TODO: create a custom error
-    }
-    this.value = cpf;
+
+    // if (!this.isValidCpf(value)) {
+    //   throw new Error("Invalid CPF format"); // TODO: create a custom error
+    // }
+
+    this.id = id;
+    this.value = value;
+    this.blocked = blocked;
+    this.createdAt = createdAt;
+  }
+
+  getId(): string {
+    return this.id;
   }
 
   getValue(): string {
     return this.value;
   }
 
+  isBlocked(): boolean {
+    return this.blocked;
+  }
 
+  getCreatedAt(): Date {
+    return this.createdAt;
+  }
 
-  // COMMENT: We could also separate the validators themselves for string size, string format, etc. (dont think its necessary here)
+  toJsonObject(): Cpf {
+    return {
+      id: this.id,
+      value: this.value,
+      blocked: this.blocked,
+      createdAt: this.createdAt,
+    };
+  }
+
+  // COMMENT: We could also separate the validators themselves for string size, string format, etc. (don`t think its necessary here)
   private isValidCpf(cpf: string): boolean {
     // Remove non-numeric characters
     const cleanedCpf = cpf.replace(/\D/g, "");
