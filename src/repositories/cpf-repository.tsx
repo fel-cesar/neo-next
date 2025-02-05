@@ -4,6 +4,7 @@ import { Cpf, CpfEntity } from "@/entities/cpf";
 
 export interface ICpfRepository {
   createCpf(value: string): Promise<Cpf>;
+  deleteCpf(cpfId: string): Promise<void>;
   getCpfList(): Promise<Cpf[]>;
   blockCpf({
     cpfId,
@@ -29,6 +30,15 @@ export const cpfRepository: ICpfRepository = {
     return new CpfEntity(await res.json()).toJsonObject();
   },
 
+  async deleteCpf(cpfId: string) {
+    const res = await fetch(`http://localhost:3000/api/cpf/${cpfId}`, {
+      method: "DELETE",
+    });
+
+    if (res.status !== 204) {
+      throw new Error("Error deleting CPF");
+    }
+  },
   async getCpfList() {
     try {
       const res = await fetch("http://localhost:3000/api/cpf");

@@ -1,5 +1,4 @@
 "use client";
-// import { Button } from "@/components/ui/button";
 import { cpfService } from "@/services/cpf-service";
 import {
   Table,
@@ -12,20 +11,38 @@ import {
 } from "@/components/ui/table";
 import { useEffect, useState } from "react";
 import { Cpf } from "@/entities/cpf";
-import BlockCpfCheckbox from "./checkbox";
 import AddCpfButton from "./add-cpf-button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import BlockStatusTableCell from "./block-status-table-cell";
+import CpfTableRow from "./cpf-table-row";
 
 export default function Dashboard() {
+  const [filter, setFilter] = useState("");
+
   return (
-    <div>
-      <AddCpfButton />
-      <CpfList></CpfList>
+    <div className="flex flex-col bg-gray-100">
+      <div className="flex justify-end p-4">
+        <AddCpfButton />
+      </div>
+      <div className="flex justify-center p-4 max-w-screen-sm">
+        <Label> Filter by CPF: </Label>
+        <Input
+          className="w-80"
+          type="text"
+          placeholder="type here the CPF to filter results"
+          value={filter}
+          onChange={(event) => setFilter(event.target.value)}
+        />
+      </div>
+      <CpfList filter={filter} />
     </div>
   );
 }
 
-function CpfList() {
+function CpfList({ filter }: { filter: string }) {
   const [cpfList, setCpfList] = useState<Cpf[]>([]);
+  // const [shouldRefresh, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchCpfList = async () => {
@@ -50,20 +67,11 @@ function CpfList() {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {cpfList.map((cpf) => {
-          return (
-            <TableRow key={cpf.value}>
-              <TableCell className="font-medium">
-                <BlockCpfCheckbox cpf={cpf} />
-              </TableCell>
-              <TableCell>{cpf.value}</TableCell>
-              <TableCell>John Doe</TableCell>
-              <TableCell className="text-right">
-                {cpf.blocked ? "Blocked" : "Active"}
-              </TableCell>
-            </TableRow>
-          );
-        })}
+        {cpfList
+          .filter((cpf) => cpf.value.includes(filter) || filter === "")
+          .map((cpf) => {
+            return <CpfTableRow key={cpf.value} cpf={cpf} />;
+          })}
       </TableBody>
     </Table>
   );
