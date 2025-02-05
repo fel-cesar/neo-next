@@ -21,8 +21,11 @@ export const cpfRepository: ICpfRepository = {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ value }),
+      body: JSON.stringify({ cpf: value }),
     });
+    if (res.status !== 201) {
+      throw new Error("Error creating CPF");
+    }
     return new CpfEntity(await res.json()).toJsonObject();
   },
 
@@ -30,6 +33,11 @@ export const cpfRepository: ICpfRepository = {
     try {
       const res = await fetch("http://localhost:3000/api/cpf");
       const data = await res.json();
+
+      if (res.status !== 200) {
+        throw new Error("Error creating CPF");
+      }
+
       return data.map((cpf: Cpf) => new CpfEntity(cpf).toJsonObject());
     } catch (error) {
       console.error(error);
