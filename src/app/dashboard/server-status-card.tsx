@@ -22,7 +22,6 @@ export default function ServerStatusCard() {
         <CardTitle>Server Status</CardTitle>
       </CardHeader>
       <CardContent>
-        <p>Card Content</p>
         <p>Uptime: {status?.uptime} seconds</p>
         <p>Request Count: {status?.requestCount}</p>
         <p>Memory Usage: {status?.memoryUsage} MB</p>
