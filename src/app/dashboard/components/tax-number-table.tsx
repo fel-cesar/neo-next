@@ -1,7 +1,6 @@
 import {
-    Table,
+  Table,
   TableBody,
-  TableCaption,
   TableHead,
   TableHeader,
   TableRow,
@@ -23,8 +22,7 @@ export default function TaxNumberTable({
   onRowChange: () => void;
 }) {
   return (
-    <Table className="min-w-screen-sm max-w-screen-sm items-center bg-slate-300 justify-self-center">
-      <TableCaption>A list of Cpf`s</TableCaption>
+    <Table className="min-w-screen-sm max-w-screen-sm items-center bg-slate-300 justify-self-center rounded-lg">
       <TableHeader>
         <TableRow>
           <TableHead className="w-[50px]">

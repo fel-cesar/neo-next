@@ -1,4 +1,6 @@
 export interface IService<T> {
+  name: string;
+  mask: string;
   create(value: string): Promise<T>;
   delete(id: string): Promise<void>;
   getList({

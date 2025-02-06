@@ -4,8 +4,10 @@ import { IService } from "./interfaces";
 import { CpfValidator } from "@/entities/cpf.validator";
 
 export const cpfService: IService<Cpf> = {
+  name: "CPFService",
+  mask: "___.___.___-__",
   async create(cpfValue: string): Promise<Cpf> {
-    if (!CpfValidator.isValid(cpfValue)) throw new Error("Invalid CNPJ data");
+    if (!CpfValidator.isValid(cpfValue)) throw new Error("Invalid CPF data");
     const createdObject = await cpfRepository.createCpf(cpfValue);
 
     return createdObject;

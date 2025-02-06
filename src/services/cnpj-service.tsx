@@ -4,6 +4,8 @@ import { IService } from "./interfaces";
 import { CnpjValidator } from "@/entities/cnpj.validator";
 
 export const cnpjService: IService<Cnpj> = {
+  name: "CNPJService",
+  mask: "__.___.___/____-__",
   async create(cnpjValue: string): Promise<Cnpj> {
     if (!CnpjValidator.isValid(cnpjValue)) throw new Error("Invalid CNPJ data");
 
