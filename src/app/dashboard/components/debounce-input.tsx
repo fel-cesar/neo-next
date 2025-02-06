@@ -1,21 +1,26 @@
 import { Input } from "@/components/ui/input";
+import { Cnpj } from "@/entities/cnpj";
 import { Cpf } from "@/entities/cpf";
-import { cpfService } from "@/services/cpf-service";
+import { IService } from "@/services/interfaces";
 import React, { useState, useEffect } from "react";
 
 export default function DebounceInput({
-  setCpfList,
+  setList,
+  placeholder,
+  service,
 }: {
-  setCpfList: React.Dispatch<React.SetStateAction<Cpf[]>>;
+  setList: React.Dispatch<React.SetStateAction<Cpf[]>>;
+  placeholder: string;
+  service: IService<Cpf | Cnpj>;
 }) {
   const [query, setQuery] = useState(""); // The search query typed by user
 
   useEffect(() => {
     const fetchCpfList = async () => {
-      const data = await cpfService.getList({
+      const data = await service.getList({
         query,
       });
-      setCpfList(data);
+      setList(data);
     };
 
     // Set a timeout to update debounced value after 500ms
@@ -27,13 +32,13 @@ export default function DebounceInput({
     return () => {
       clearTimeout(handler);
     };
-  }, [query, setCpfList]);
+  }, [query, setList, service]);
 
   return (
     <Input
       className="w-80"
       type="text"
-      placeholder="type here the CPF to filter results"
+      placeholder={placeholder}
       value={query}
       onChange={(e) => setQuery(e.target.value)}
     />

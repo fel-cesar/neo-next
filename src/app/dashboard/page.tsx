@@ -1,23 +1,13 @@
 "use client";
-import { cpfService } from "@/services/cpf-service";
-import { cnpjService } from "@/services/cnpj-service";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { useEffect, useState } from "react";
-import { Cpf } from "@/entities/cpf";
-import AddCpfButton from "./add-cpf-button";
-import { Label } from "@/components/ui/label";
-import DebounceInput from "./debounce-input";
+import { Card } from "@/components/ui/card";
 import { Cnpj } from "@/entities/cnpj";
-import CustomTableRow from "./custom-table-row";
-import { IService } from "@/services/interfaces";
-import ServerStatusCard from "./server-status-card";
+import { Cpf } from "@/entities/cpf";
+import { cnpjService } from "@/services/cnpj-service";
+import { cpfService } from "@/services/cpf-service";
+import { useEffect, useState } from "react";
+import DynamicTabs from "./components/dynamic-tab";
+import ServerStatusCard from "./components/server-status-card";
+import TaxNumberSection from "./components/tax-number-section";
 
 export default function Dashboard() {
   const [cpfList, setCpfList] = useState<Cpf[]>([]);
@@ -44,61 +34,47 @@ export default function Dashboard() {
   }, []);
 
   return (
-    <div className="flex flex-col bg-gray-100">
-        <ServerStatusCard />
-      <div className="flex justify-end p-4">
-        <AddCpfButton onCreate={refresh} />
-      </div>
-      <div className="flex justify-center p-4 max-w-screen-sm">
-        <Label> Filter by CPF: </Label>
-        <DebounceInput setCpfList={setCpfList} />
-      </div>
-      <div className="flex">
-        <CustomList list={cpfList} service={cpfService} onRowChange={refresh} />
-        <CustomList
-          list={cnpjList}
-          service={cnpjService}
-          onRowChange={refresh}
-        />
+    <div className="flex flex-col">
+      <div className="flex justify-center h-full p-8">
+        <Card className="h-[700px] p-4">
+          <DynamicTabs
+            tabs={[
+              {
+                label: "CPF",
+                value: "cpf",
+                content: (
+                  <TaxNumberSection
+                    list={cpfList}
+                    setList={setCpfList}
+                    service={cpfService}
+                    onRowChange={refresh}
+                    label="CPF"
+                  />
+                ),
+              },
+              {
+                label: "CNPJ",
+                value: "cnpj",
+                content: (
+                  <TaxNumberSection
+                    list={cnpjList}
+                    setList={setCnpjList}
+                    service={cnpjService}
+                    onRowChange={refresh}
+                    label="CNPJ"
+                  />
+                ),
+              },
+              {
+                label: "Server",
+                value: "server",
+                content: <ServerStatusCard />,
+              },
+            ]}
+          />
+        </Card>
       </div>
     </div>
   );
 }
 
-function CustomList({
-  list,
-  service,
-  onRowChange,
-}: {
-  list: Cpf[] | Cnpj[];
-  service: IService<Cnpj | Cpf>;
-  onRowChange: () => void;
-}) {
-  return (
-    <Table className="min-w-screen-sm max-w-screen-sm items-center bg-slate-300 justify-self-center">
-      <TableCaption>A list of Cpf`s</TableCaption>
-      <TableHeader>
-        <TableRow>
-          <TableHead className="w-[50px]">
-            <div className="text-black font-bold">Block Status</div>
-          </TableHead>
-          <TableHead className="text-black font-bold">CPF</TableHead>
-          <TableHead className="text-black font-bold">Name</TableHead>
-          <TableHead className="text-black font-bold">Status</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {list.map((cpf) => {
-          return (
-            <CustomTableRow
-              key={cpf.value}
-              cpf={cpf}
-              service={service}
-              onChange={onRowChange}
-            />
-          );
-        })}
-      </TableBody>
-    </Table>
-  );
-}
