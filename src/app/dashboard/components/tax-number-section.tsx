@@ -5,6 +5,7 @@ import TaxNumberTable from "./tax-number-table";
 import { IService } from "@/services/interfaces";
 import { Cnpj } from "@/entities/cnpj";
 import CreateTaxNumberButton from "./create-tax-number-button";
+import CreateRandomNumberButton from "./create-random-number-button";
 
 interface TaxNumberSectionArgs {
   setList: React.Dispatch<React.SetStateAction<Cpf[]>>;
@@ -23,17 +24,26 @@ export default function TaxNumberSection({
 }: TaxNumberSectionArgs) {
   return (
     <div className="flex flex-col gap-4">
-      <CreateTaxNumberButton onCreate={onRowChange} service={service} label={label} />
+      <CreateTaxNumberButton
+        onCreate={onRowChange}
+        service={service}
+        label={label}
+      />
+      <CreateRandomNumberButton service={service} onSuccess={onRowChange} />
       <div className="flex flex-col gap-1 bold">
         <Label>Filter by {label} </Label>
-        <DebounceInput setList={setList} placeholder={label} service={service} />
+        <DebounceInput
+          setList={setList}
+          placeholder={label}
+          service={service}
+        />
       </div>
-      <TaxNumberTable
-        list={list}
-        service={service}
-        onRowChange={onRowChange}
-        label="CPF"
-      />
+        <TaxNumberTable
+          list={list}
+          service={service}
+          onRowChange={onRowChange}
+          label={label}
+        />
     </div>
   );
 }

@@ -2,9 +2,10 @@ import { Cpf } from "@/entities/cpf";
 import { cpfRepository } from "@repositories/cpf-repository";
 import { IService } from "./interfaces";
 import { CpfValidator } from "@/entities/cpf.validator";
+import { generateRandomCpf } from "@/lib/utils";
 
 export const cpfService: IService<Cpf> = {
-  name: "CPFService",
+  name: "CPF",
   mask: "___.___.___-__",
   async create(cpfValue: string): Promise<Cpf> {
     if (!CpfValidator.isValid(cpfValue)) throw new Error("Invalid CPF data");
@@ -46,5 +47,19 @@ export const cpfService: IService<Cpf> = {
       shouldBlock: block,
     });
     return blockStatus;
+  },
+
+  /**
+   * Generates and adds a new valid CPF to the database.
+   * @returns {Promise<Cpf>} The created CPF object.
+   */
+  async createRandom(): Promise<Cpf> {
+    const generatedCpf = generateRandomCpf();
+
+    if (!CpfValidator.isValid(generatedCpf)) {
+      throw new Error("Generated CPF is invalid (unexpected).");
+    }
+
+    return await cpfRepository.createCpf(generatedCpf);
   },
 };

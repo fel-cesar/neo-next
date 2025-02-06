@@ -13,4 +13,6 @@ export interface IService<T> {
     ordering?: "asc" | "desc";
   }): Promise<T[]>;
   switchBlock({ id, block }: { id: string; block: boolean }): Promise<boolean>;
+
+  createRandom(): Promise<T>;
 }

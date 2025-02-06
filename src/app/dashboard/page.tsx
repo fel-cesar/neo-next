@@ -34,9 +34,9 @@ export default function Dashboard() {
   }, []);
 
   return (
-    <div className="flex flex-col bg-gray-200 h-screen">
-      <div className="flex justify-center h-full pb-8">
-        <Card className="p-4">
+    <div className="flex flex-col">
+      <div className="flex justify-center h-full p-8">
+        <Card className="h-[700px] p-4">
           <DynamicTabs
             tabs={[
               {
