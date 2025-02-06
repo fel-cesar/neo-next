@@ -48,7 +48,7 @@ function TableRowMenu({
       await onSuccess();
     } catch (error) {
       console.error(error);
-      toast.error(`There was an error deleting the CPF "${cpf.value}"`);
+      toast.error(`There was an error deleting the tax number "${cpf.value}"`);
     }
   }
   return (

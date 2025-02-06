@@ -1,27 +1,8 @@
 import { Cpf, CpfEntity } from "@/entities/cpf";
+import { ICpfRepository } from "./interfaces";
 
 // COMMENT: The responsibility of the repository is to fetch the data from the data source (decide the data source),  in this case, we merged the repository and the data sources for simplicity.
 
-export interface ICpfRepository {
-  createCpf(value: string): Promise<Cpf>;
-  deleteCpf(cpfId: string): Promise<void>;
-  getCpfList({
-    query,
-    blocked,
-    ordering,
-  }: {
-    query?: string;
-    blocked?: boolean;
-    ordering?: "asc" | "desc";
-  }): Promise<Cpf[]>;
-  blockCpf({
-    cpfId,
-    shouldBlock,
-  }: {
-    cpfId: string;
-    shouldBlock: boolean;
-  }): Promise<boolean>;
-}
 
 export const cpfRepository: ICpfRepository = {
   async createCpf(value: string): Promise<Cpf> {

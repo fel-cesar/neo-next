@@ -5,7 +5,7 @@ import { CnpjValidator } from "@/entities/cnpj.validator";
 
 export const cnpjService: IService<Cnpj> = {
   async create(cnpjValue: string): Promise<Cnpj> {
-    if (!CnpjValidator.isValid(cnpjValue)) throw new Error("Invalid CPF data");
+    if (!CnpjValidator.isValid(cnpjValue)) throw new Error("Invalid CNPJ data");
 
     const createdObject = await cnpjRepository.createCnpj(cnpjValue);
     return createdObject;

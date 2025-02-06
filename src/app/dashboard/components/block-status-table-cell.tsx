@@ -1,4 +1,3 @@
-// "use client";
 import { Switch } from "@/components/ui/switch";
 import { TableCell } from "@/components/ui/table";
 import { Cnpj } from "@/entities/cnpj";

@@ -17,7 +17,7 @@ export default function ServerStatusCard() {
   }, []);
 
   return (
-    <Card className="flex flex-col items-center justify-center max-w-60">
+    <Card className="flex flex-col items-center justify-center max-w-60 justify-self-center">
       <CardHeader>
         <CardTitle>Server Status</CardTitle>
       </CardHeader>
